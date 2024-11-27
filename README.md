@@ -1,16 +1,11 @@
 # api_mock
 
-A new Flutter project.
+## API仕様書
 
-## Getting Started
+URLはこちらのfree apiを使用
 
-This project is a starting point for a Flutter application.
+https://api.restful-api.dev/objects/
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+|method|info|
+|---|----|
+|GET|/1から取得する|
