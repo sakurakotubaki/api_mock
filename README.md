@@ -8,7 +8,7 @@ https://medium.com/@yamen.abd98/unit-testing-in-flutter-with-clean-architecture-
 
 URLはこちらのfree apiを使用
 
-https://api.restful-api.dev/objects/
+https://jsonplaceholder.typicode.com/users
 
 |method|info|
 |---|----|
