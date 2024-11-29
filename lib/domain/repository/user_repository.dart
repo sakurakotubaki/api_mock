@@ -8,6 +8,7 @@ part 'user_repository.g.dart';
 
 abstract class UserRepository {
   Future<List<UserState>> getUsers();
+  Future<UserState> createUser(UserState user);
 }
 
 @Riverpod(keepAlive: true)
@@ -44,6 +45,32 @@ class UserRepositoryImpl implements UserRepository {
       }
     } catch (e) {
       throw Exception('Failed to fetch users: $e');
+    }
+  }
+
+  Future<UserState> createUser(UserState user) async {
+    try {
+      final response = await ref.read(dioProvider).post(
+            '/',
+            data: user.toJson(),
+            options: Options(
+              headers: {'Content-Type': 'application/json'},
+            ),
+          );
+
+      if (response.statusCode == 201) {
+        return UserState.fromJson(response.data);
+      }
+
+      if (response.statusCode == 422) {
+        // バリデーションエラーの処理
+        final errors = response.data['errors'];
+        throw Exception('Validation failed: $errors');
+      }
+
+      throw Exception('Failed to create user');
+    } catch (e) {
+      throw Exception('Failed to create user: $e');
     }
   }
 }

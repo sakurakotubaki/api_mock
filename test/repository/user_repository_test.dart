@@ -75,4 +75,102 @@ void main() {
       );
     });
   });
+
+  // POSTメソッドのテスト
+  test('createUser creates a new user on successful response', () async {
+    final newUser = UserState(
+      name: 'New User',
+      email: 'newuser@example.com',
+    );
+
+    final mockResponse = {
+      'id': 1,
+      'name': 'New User',
+      'email': 'newuser@example.com',
+    };
+
+    when(mockDio.post(
+      any,
+      data: anyNamed('data'),
+      options: anyNamed('options'),
+    )).thenAnswer((_) async => Response(
+          data: mockResponse,
+          statusCode: 201,
+          requestOptions: RequestOptions(path: '/'),
+        ));
+
+    final repository = container.read(userRepositoryProvider);
+    final result = await repository.createUser(newUser);
+
+    expect(result, isA<UserState>());
+    expect(result.id, 1);
+    expect(result.name, 'New User');
+    expect(result.email, 'newuser@example.com');
+
+    verify(mockDio.post(
+      any,
+      data: anyNamed('data'),
+      options: anyNamed('options'),
+    )).called(1);
+  });
+
+  test('createUser throws exception on error response', () async {
+    final newUser = UserState(
+      name: 'New User',
+      email: 'newuser@example.com',
+    );
+
+    when(mockDio.post(
+      any,
+      data: anyNamed('data'),
+      options: anyNamed('options'),
+    )).thenAnswer((_) async => Response(
+          statusCode: 400,
+          requestOptions: RequestOptions(path: '/'),
+        ));
+
+    final repository = container.read(userRepositoryProvider);
+
+    expect(
+      () => repository.createUser(newUser),
+      throwsA(isA<Exception>()),
+    );
+  });
+
+  test('createUser handles validation errors', () async {
+    final newUser = UserState(
+      name: '', // 無効な名前
+      email: 'invalid-email', // 無効なメール
+    );
+
+    final mockResponse = {
+      'errors': {
+        'name': ['Name is required'],
+        'email': ['Invalid email format'],
+      }
+    };
+
+    when(mockDio.post(
+      any,
+      data: anyNamed('data'),
+      options: anyNamed('options'),
+    )).thenAnswer((_) async => Response(
+          data: mockResponse,
+          statusCode: 422,
+          requestOptions: RequestOptions(path: '/'),
+        ));
+
+    final repository = container.read(userRepositoryProvider);
+
+    expect(
+      () => repository.createUser(newUser),
+      throwsA(isA<Exception>()),
+    );
+
+    verify(mockDio.post(
+      any,
+      data: anyNamed('data'),
+      options: anyNamed('options'),
+    )).called(1);
+  });
 }
