@@ -13,3 +13,4 @@ https://api.restful-api.dev/objects/
 |method|info|
 |---|----|
 |GET|/から取得する|
+|POST|/へリクエストを送る|
