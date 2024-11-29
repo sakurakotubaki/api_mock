@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_repository.g.dart';
 
-abstract class UserRepository {
+abstract interface class UserRepository {
   Future<List<UserState>> getUsers();
   Future<UserState> createUser(UserState user);
 }
